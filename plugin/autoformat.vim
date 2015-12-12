@@ -61,7 +61,7 @@ function! s:TryAllFormatters(...) range
     " Make sure formatters are defined and detected
     if !call('<SID>find_formatters', a:000)
         " No formatters defined, so autoindent code
-        exe "normal gg=G"
+        call s:Fallback()
         return 0
     endif
 
@@ -108,11 +108,19 @@ function! s:TryAllFormatters(...) range
 
         if s:index == b:current_formatter_index
             " Tried all formatters, none worked so autoindent code
-            exe "normal gg=G"
+            call s:Fallback()
             return 0
         endif
     endwhile
 
+endfunction
+
+
+function! s:Fallback()
+    " Indent code
+    exe "normal gg=G"
+    " And remove trailing whitespace
+    exe "%s/\\s\\+$"
 endfunction
 
 
